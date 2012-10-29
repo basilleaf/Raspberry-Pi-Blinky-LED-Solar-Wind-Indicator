@@ -43,27 +43,15 @@ while True:
 		# this is data!
 		data = line.split()
 
-		"""
-		my_science_data += [{
-							'YR':data[0], 	
-							'DA' : data[1],
-							'HHMM' : data[2],
-							'JDAY' : data[3],
-							'SDAY' : data[4],
-							'S' : data[5],
-							'Proton_Density' : data[6],
-							'Bulk_Speed' : data[7],
-							'Ion_Temp' : data[8]
-							}]
-		"""
 		try:
 			my_science_data.append({'SDAY': data[-5], 'Bulk_Speed' : data[-2] })
+			page_lines.close()
+			break # we only want the first real data entry
 		except IndexError:	
 			pass
-	page_lines.close()
 
 	# start the sequence
-	offset = 10 # seconds - the real offset is 60
+	offset = 60 # seconds - the real offset is 60
 	for obs in my_science_data:
 
 		speed = float(obs['Bulk_Speed'])
@@ -72,6 +60,11 @@ while True:
 
 		now = time.time()
 		future = now + offset
+
+		if speed == -9999.9: # this is their null, turn it off..
+			GPIO.output(11, False)
+			time.sleep(int(offset/2))
+			break
 
 		if speed < 340:
 			while True:
