@@ -1,7 +1,3 @@
-"""
-	For the Raspberry Pi: Blink an LED to indicate speed of solar wind speed
-	real time solar wind data feed here: http://www.swpc.noaa.gov/ftpdir/lists/ace/ace_swepam_1m.txt
-"""
 import RPi.GPIO as GPIO
 import time
 import urllib2
