@@ -12,24 +12,24 @@ def blink(wind_speed):
 	GPIO.output(11, False)
 	time.sleep(blink_delay)
 
-def get_blink_delay(wind_wind_speed):
+def get_blink_delay(wind_speed):
 	# want to find blink delay that corresponds inversely with wind wind_speed
 	# so when wind wind_speed increases blink wind_speed increases
 	# blink delay is time between ON and OFF and corresponds inversely with solar wind wind_speed
 	# so doing this with a negative linear slope between 2 points on a plane (my WAG at an approach)
 	# where x axis = wind wind_speed and y axis = blink wind_speed
 	# find the equation of the slope between the 2 points then 
-	# when given wind_wind_speed solve for y to get blink delay:
+	# when given wind_speed solve for y to get blink delay:
 
 	# for now we are manually guessing at endpoints, based on perusing the data:
-	wind_wind_speed_endpoints = (260.,325) # x1, x2
+	wind_speed_endpoints = (260.,325) # x1, x2
 	blink_delay_endpoints = (2., .05)  # y1, y2
 
 	# solve for y to get blink delay
-	(x1, x2) = wind_wind_speed_endpoints  # points on an x-y graph
+	(x1, x2) = wind_speed_endpoints  # points on an x-y graph
 	(y1, y2) = blink_delay_endpoints
 	m = (y2-y1)/(x2-x1) # slope = rise/run
-	blink_delay = m*(wind_wind_speed - x1) + y1 # y-y1 = m(x-x1) maths! 
+	blink_delay = m*(wind_speed - x1) + y1 # y-y1 = m(x-x1) maths! 
 	return blink_delay
 
 while True:
