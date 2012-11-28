@@ -3,8 +3,8 @@ import time
 import urllib2
 
 # for now we are manually guessing at endpoints, based on perusing the data. Tweak these:
-wind_speed_endpoints = (260.,380.) # x1, x2
-blink_delay_endpoints = (2., .05)  # y1, y2
+wind_speed_endpoints = [260.,380.] # x1, x2
+blink_delay_endpoints = [2., .05] # y1, y2
 
 url = 'http://www.swpc.noaa.gov/ftpdir/lists/ace/ace_swepam_1m.txt'
 
@@ -21,6 +21,16 @@ def blink(wind_speed):
 	GPIO.output(11, False)
 	time.sleep(blink_delay)
 
+def null_hold():
+	# indicate the current result is null and do that for around 20 seconds
+	for t in range(1,10):
+	        for i in range(1,3):
+	                GPIO.output(11, True)
+	                time.sleep(.1)
+	                GPIO.output(11, False)
+	                time.sleep(.1)
+	        time.sleep(2.5)
+
 def get_blink_delay(wind_speed,wind_speed_endpoints,blink_delay_endpoints):
 	# want to find blink delay that corresponds inversely with solar wind speed
 	# so when solar wind speed increases blink speed increases
@@ -33,10 +43,10 @@ def get_blink_delay(wind_speed,wind_speed_endpoints,blink_delay_endpoints):
 	# but first: have we bursted from our expected range? adjust!
 	if wind_speed < wind_speed_endpoints[0]:
 		wind_speed_endpoints[0] = wind_speed
-		print "new min wind_speed = " + wind_speed
+		print "new min wind_speed = " + str(wind_speed)
 	if wind_speed > wind_speed_endpoints[1]:
 		wind_speed_endpoints[1] = wind_speed
-		print "new max wind_speed = " + wind_speed
+		print "new max wind_speed = " + str(wind_speed)
 
 	# solving for y.. 
 	(x1, x2) = wind_speed_endpoints  # points on an x-y graph
@@ -56,12 +66,12 @@ while True:
 		if consecutive_urlib_errors < 3: time.sleep(5)
 		else: time.sleep(20) # start waiting a little longer if it fails 3+ times
 		if consecutive_urlib_errors < 7:
-			print 'url failed, waiting a sec and trying again..'
+			print 'url failed ' + str(consecutive_urlib_errors) + 'times, waiting a sec and trying again..'
 			continue  
 		else: 
-			raise Exception("url failed 7 times in a row, turning off")
-
+			raise Exception("url failed " + str(consecutive_urlib_errors) + "times in a row, turning off")
 	consecutive_urlib_errors = 0
+
 	# grab the data from the page
 	my_science_data = []
 	for line in page_lines:
@@ -93,7 +103,7 @@ while True:
 
 		if wind_speed == -9999.9: # this is their null, just turn off the LED..
 			GPIO.output(11, False)
-			time.sleep(int(offset/2))
+			null_hold()
 			break
 
 		while True:
