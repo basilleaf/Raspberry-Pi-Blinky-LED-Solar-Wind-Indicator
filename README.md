@@ -1,5 +1,5 @@
 For the Raspberry Pi: Blink an LED to roughly indicate near real-time speed of solar wind. Blink speed proportional to 
-solar wind speed by fetching *real-time solar wind speed data feed here: http://www.swpc.noaa.gov/ftpdir/lists/ace/ace_swepam_1m.txt
+solar wind speed by fetching real-time solar wind speed data feed from the ACE spacecraft, here: http://www.swpc.noaa.gov/ftpdir/lists/ace/ace_swepam_1m.txt
 
 Very hacky. 
 
